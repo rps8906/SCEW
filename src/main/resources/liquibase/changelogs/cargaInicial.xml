@@ -1,0 +1,91 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="Ramiro" id="createTableClientes">
+		<createTable tableName="clientes">
+			<column name="id_cliente" type="int(15)" autoIncrement="true" incrementBy="1">
+				<constraints primaryKey="true" primaryKeyName="pk_cliente_id" />
+			</column>
+			<column name="nombre_cliente" type="varchar(100)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="rfc" type="varchar(15)" >
+				<constraints nullable="false"/>
+			</column>
+			<column name="correo" type="varchar(30)" >
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="createTableOrdenDia" author="Ramiro">
+		<createTable tableName="OrdenDia">
+			<column name="numOrden" type="varchar(10)" >
+				<constraints primaryKey="true" primaryKeyName="pk_numOrden"/>
+			</column>
+			<column name="id_cliente" type="int(15)" >
+				<constraints nullable="false" foreignKeyName="fk_cliente_id" references="clientes(id_cliente)"/>
+			</column>
+			<column name="mensaje" type="varchar(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="fecha" type="datetime">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="createTableEmpleados" author="Ramiro">
+		<createTable tableName="empleados">
+			<column name="clave_empleado" type="int(15)" autoIncrement="true" incrementBy="1">
+				<constraints primaryKey="true" primaryKeyName="pk_empleado_id" />
+			</column>
+			<column name="nombre_empleado" type="varchar(100)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="direccion" type="varchar(150)"/> 
+			<column name="telefono" type="varchar(10)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="createTableCatTipoTelefono" author="Ramiro">
+		<createTable tableName="cat_tipo_telefono">
+			<column name="id_tipo" type="int(15)">
+				<constraints primaryKey="true" primaryKeyName="pk_tipo_id"/>
+			</column>
+			<column name="tipo_telefono" type="varchar(20)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="createTableTelefono" author="Ramiro">
+		<createTable tableName="telefono">
+			<column name="id_telefono" type="int(15)">
+				<constraints primaryKey="true" primaryKeyName="pk_telefono_id"/>
+			</column>
+			<column name="num_telefono" type="varchar(10)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="id_tipo" type="int(15)">
+				<constraints foreignKeyName="fk_tipo_id" references="cat_tipo_telefono(id_tipo)" nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="createTableClienteTelefono" author="Ramiro">
+		<createTable tableName="cliente_telefono">
+			<column name="id_cliente" type="int(15)">
+				<constraints foreignKeyName="fk_cliente_id_telefono" references="clientes(id_cliente)"/>
+			</column>
+			<column name="id_telefono" type="int(15)">
+				<constraints foreignKeyName="fk_telefono_id_cliente" references="telefono(id_telefono)" unique="true"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>
