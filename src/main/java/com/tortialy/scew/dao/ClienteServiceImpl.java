@@ -41,7 +41,7 @@ public class ClienteServiceImpl implements ClienteService{
 		Cliente clienteACambiar = getClienteById(cliente.getIdCliente());
 		if(clienteACambiar == null)
 			return null;
-		clienteACambiar.updateCliente(cliente);
+		clienteACambiar.updateCliente(clienteACambiar);
 		return clienteACambiar;
 	}
 

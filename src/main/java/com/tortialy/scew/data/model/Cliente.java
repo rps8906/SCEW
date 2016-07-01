@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -36,6 +37,14 @@ public class Cliente implements Serializable{
     private int idCliente;
 	
 	@NotNull
+	@Column(name="id_usuario")
+	private int idUsuaario;
+	
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario" , insertable = false, updatable = false, nullable = false)
+	private Usuario usuario;
+	
+	@NotNull
 	@Column(name = "nombre_cliente")
 	private String nombreCliente;
 	
@@ -51,7 +60,7 @@ public class Cliente implements Serializable{
     @JoinTable(name = "cliente_telefono",
             joinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente"),
             inverseJoinColumns = @JoinColumn(name = "id_telefono", referencedColumnName = "id_telefono"))
-	private List<Telefono> Telefonos;
+	private List<Telefono> telefonos;
 	
 	public Cliente(){
 		
@@ -61,7 +70,7 @@ public class Cliente implements Serializable{
 		this.nombreCliente = cliente.nombreCliente;
 		this.rfc = cliente.rfc;
 		this.correo = cliente.correo;
-		this.Telefonos = cliente.getTelefonos();
+		this.telefonos = cliente.telefonos;
 		return this;
 	}
 	

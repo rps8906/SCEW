@@ -2,11 +2,49 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
+	
+	<changeSet id="createTableUsuario" author="Ramiro">
+		<createTable tableName="usuarios">
+			<column name="id_usuario" type="int(15)" autoIncrement="true" incrementBy="1">
+				<constraints primaryKey="true" primaryKeyName="pk_usuario_id"/>
+			</column>
+			<column name="username" type="varchar(35)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="nombre_completo" type="varchar(100)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="password" type="varchar(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="correo" type="varchar(30)" >
+				<constraints nullable="false"/>
+			</column>
+			<column name="enabled" type="TINYINT" defaultValue="1">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="createTableRolUsuario" author="Ramiro">
+		<createTable tableName="roles">
+			<column name="id_rol" type="int(15)" autoIncrement="true" incrementBy="1">
+				<constraints primaryKey="true" primaryKeyName="pk_rol_id"/>
+			</column>
+			<column name="id_usuario" type="int(15)">
+				<constraints nullable="false" foreignKeyName="fk_usuario_id_usuarios" references="usuarios(id_usuario)"/>
+			</column>
+			<column name="rol" type="varchar(10)"></column>
+		</createTable>
+	</changeSet>
+	
 	<changeSet author="Ramiro" id="createTableClientes">
 		<createTable tableName="clientes">
 			<column name="id_cliente" type="int(15)" autoIncrement="true" incrementBy="1">
 				<constraints primaryKey="true" primaryKeyName="pk_cliente_id" />
+			</column>
+			<column name="id_usuario" type="int(15)">
+				<constraints nullable="false" foreignKeyName="fk_usuario_id" references="usuarios(id_usuario)"/>
 			</column>
 			<column name="nombre_cliente" type="varchar(100)">
 				<constraints nullable="false"/>
@@ -42,13 +80,15 @@
 			<column name="clave_empleado" type="int(15)" autoIncrement="true" incrementBy="1">
 				<constraints primaryKey="true" primaryKeyName="pk_empleado_id" />
 			</column>
+			<column name="id_usuario" type="int(15)">
+				<constraints nullable="false" foreignKeyName="fk_usuario_id_empleados" references="usuarios(id_usuario)"/>
+			</column>
 			<column name="nombre_empleado" type="varchar(100)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="direccion" type="varchar(150)"/> 
-			<column name="telefono" type="varchar(10)">
-				<constraints nullable="false" unique="true"/>
-			</column>
+			<column name="direccion" type="varchar(150)">
+				<constraints nullable="false"/>
+			</column> 
 		</createTable>
 	</changeSet>
 	
@@ -84,6 +124,17 @@
 			</column>
 			<column name="id_telefono" type="int(15)">
 				<constraints foreignKeyName="fk_telefono_id_cliente" references="telefono(id_telefono)" unique="true"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="createTableEmpleadoTelefono" author="Ramiro">
+		<createTable tableName="empleado_telefono">
+			<column name="clave_empleado" type="int(15)">
+				<constraints foreignKeyName="fk_empleado_id_telefono" references="empleados(clave_empleado)"/>
+			</column>
+			<column name="id_telefono" type="int(15)">
+				<constraints foreignKeyName="fk_telefono_id_empleado" references="telefono(id_telefono)" unique="true"/>
 			</column>
 		</createTable>
 	</changeSet>
